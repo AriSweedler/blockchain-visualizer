@@ -1,8 +1,9 @@
 import Hash from './Hash.tsx'
 
 export default function Block({hash, state, salt}) {
+  const color = `#${hash.slice(0, 6)}`
   const blockStyle = {
-    border: "1em solid black",
+    border: `1em solid ${color}`,
     backgroundColor: "#333",
     padding: "1em",
     margin: "1em",

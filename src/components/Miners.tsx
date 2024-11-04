@@ -1,27 +1,10 @@
 import { useState } from 'react'
-import Hash from './Hash.tsx'
+import Miner from './Miner.tsx'
+import Data from './Data.tsx'
 import hash from '../lib/hasher'
+import { minerBlock, addBlock } from '../lib/blockchain.tsx'
 
 export default function Miners({state, setState}) {
-  const MinerBlock = (stateIn, miner) => ({
-    parent: state.head,
-    data: miner.data,
-    salt: miner.salt,
-  })
-
-  const addBlock = (stateIn, miner) => {
-    // Marshal the input data into a block
-    const newBlock = MinerBlock(stateIn, miner)
-    const newHash = hash(newBlock)
-
-    // Deep copy stateIn
-    let stateOut = JSON.parse(JSON.stringify(stateIn))
-    stateOut.blocks[newHash] = newBlock
-    stateOut.head = newHash
-
-    return stateOut
-  }
-
   const newSalts = () => {
     let newState = JSON.parse(JSON.stringify(state))
     Object.keys(newState.miners).forEach((minerName) => {
@@ -33,17 +16,14 @@ export default function Miners({state, setState}) {
 
   // Return an array of miners. Filter out all miners that dont have hashes
   // starting with "0"
-  const validMiner = (nonce, state) => {
+  const validMiner = (state) => {
     let validMiners = []
     Object.keys(state.miners).forEach((minerName) => {
       let miner = state.miners[minerName]
-      let newBlock = MinerBlock(state, miner)
+      let newBlock = minerBlock(state, miner)
       let newHash = hash(newBlock)
-      if (newHash.startsWith(nonce)) {
+      if (newHash.startsWith(state.meta.nonce)) {
         validMiners.push(minerName)
-      }
-      else {
-        console.debug(`${minerName} is not a valid miner - ${newHash}`)
       }
     })
     return validMiners
@@ -54,51 +34,38 @@ export default function Miners({state, setState}) {
   const systemSalt = (state) => {
     setTimeout(() => {
       const newState = newSalts();
-      const winners = validMiner("00", newState);
+      const winners = validMiner("888", newState);
       if (winners.length > 0) {
         const winning_miner = newState.miners[winners[0]];
         const newStateWithBlock = addBlock(newState, winning_miner);
-        console.log("System Salt won - stopping");
         setState(newStateWithBlock);
+        console.log(`Block mined by ${winners[0]}! :D`);
         return;
       }
-      console.log("System Salt lost - continuing");
+      console.log("No valid blocks found this time. Trying again.");
       setState(newState);
       systemSalt(newState)
-    }, 100);
+    }, state.meta.delay);
     return;
   };
 
   const mineWrapperStyle = {
-    border: "1em solid blue",
+    border: "1em solid green",
   }
 
   const mineStyle = {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-around",
     backgroundColor: "#333",
     padding: "1em",
     margin: "1em",
   }
 
-  const minerStyle = {
-    border: "0.25em solid green",
-    backgroundColor: "#333",
-    margin: "0.25em",
-    padding: "1em",
-    paddingTop: "0",
-    paddingBottom: "0",
-  }
-
-  const minerNameStyle = {
-    color: "green",
-    margin: "-0.25em",
-    padding: "0em",
-  }
-
   return (
     <div style={mineWrapperStyle} >
       <h1>Miners</h1>
+      <Data state={state} />
       <button onClick={() => newSalts()}>New Salts</button>
       <button
         id="systemSalt"
@@ -109,17 +76,12 @@ export default function Miners({state, setState}) {
       </button>
       <div style={mineStyle}>
         {Object.keys(state.miners).map((minerName) => (
-          <div style={minerStyle} key={minerName}>
-            <button onClick={() => setState(addBlock(state, state.miners[minerName]))}>
-              <h2 style={minerNameStyle}>{minerName} mines</h2>
-            </button>
-            <p>Salt: <code>{state.miners[minerName].salt}</code></p>
-            <h3>Hash:&nbsp;
-              <Hash hash={
-                hash(MinerBlock(state, state.miners[minerName]))
-              } />
-            </h3>
-          </div>
+          <Miner
+            state={state}
+            setState={setState}
+            minerName={minerName}
+            key={minerName}
+          />
         ))}
       </div>
     </div>
