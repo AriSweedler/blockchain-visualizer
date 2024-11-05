@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import AutoResizeTextArea from './AutoResizeTextArea'
+import AutoResizeTextarea from './AutoResizeTextarea.tsx'
 
 export default function Data({state, setState}) {
   const [jsonText, setJsonText] = useState(JSON.stringify(state.data, null, 2));
@@ -50,7 +50,7 @@ export default function Data({state, setState}) {
   return (
     <div style={dataWrapperStyle}>
       <h2 style={h2Style}>Data to add</h2>
-      <AutoResizeTextArea
+      <AutoResizeTextarea
         style={dataStyle}
         value={jsonText}
         onChange={handleJsonChange}
