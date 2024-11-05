@@ -1,19 +1,23 @@
+import { randomSalt } from "./blockchain.tsx";
+
 const startingState = {
   meta: {
-    delay: 100,
-    head: "start",
-    nonce: "00",
+    systemSaltDelay: 100,
+    validBlockStartPrefix: "0",
+    blockchainHead: "start",
   },
-  data: "startingData",
+  data: {
+    "k": "v",
+  },
   miners: {
     ari: {
-      salt: "salt1",
+      salt: "0000",
     },
     jake: {
-      salt: "salt2",
+      salt: randomSalt(),
     },
     kurt: {
-      salt: "salt3",
+      salt: randomSalt(),
     },
   },
   blocks: {},

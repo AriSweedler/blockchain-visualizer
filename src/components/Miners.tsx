@@ -2,27 +2,27 @@ import { useState } from 'react'
 import Miner from './Miner.tsx'
 import Data from './Data.tsx'
 import hash from '../lib/hasher'
-import { minerBlock, addBlock } from '../lib/blockchain.tsx'
+import { minerBlock, addBlock, randomSalt } from '../lib/blockchain.tsx'
 
 export default function Miners({state, setState}) {
   const newSalts = () => {
     let newState = JSON.parse(JSON.stringify(state))
     Object.keys(newState.miners).forEach((minerName) => {
-      newState.miners[minerName].salt = hash(Math.random().toString()).substring(0,4)
+      newState.miners[minerName].salt = randomSalt()
     })
     setState(newState)
     return newState
   }
 
-  // Return an array of miners. Filter out all miners that dont have hashes
+  // Return an array of miners. Filter out all miners that do not have hashes
   // starting with "0"
   const validMiner = (state) => {
     let validMiners = []
     Object.keys(state.miners).forEach((minerName) => {
       let miner = state.miners[minerName]
-      let newBlock = minerBlock(state, miner)
+      let newBlock = minerBlock(state, minerName)
       let newHash = hash(newBlock)
-      if (newHash.startsWith(state.meta.nonce)) {
+      if (newHash.startsWith(state.meta.validBlockStartPrefix)) {
         validMiners.push(minerName)
       }
     })
@@ -34,10 +34,9 @@ export default function Miners({state, setState}) {
   const systemSalt = (state) => {
     setTimeout(() => {
       const newState = newSalts();
-      const winners = validMiner("888", newState);
+      const winners = validMiner(newState);
       if (winners.length > 0) {
-        const winning_miner = newState.miners[winners[0]];
-        const newStateWithBlock = addBlock(newState, winning_miner);
+        const newStateWithBlock = addBlock(newState, winners[0]);
         setState(newStateWithBlock);
         console.log(`Block mined by ${winners[0]}! :D`);
         return;
@@ -45,7 +44,7 @@ export default function Miners({state, setState}) {
       console.log("No valid blocks found this time. Trying again.");
       setState(newState);
       systemSalt(newState)
-    }, state.meta.delay);
+    }, state.meta.systemSaltDelay);
     return;
   };
 
@@ -65,7 +64,7 @@ export default function Miners({state, setState}) {
   return (
     <div style={mineWrapperStyle} >
       <h1>Miners</h1>
-      <Data state={state} />
+      <Data state={state} setState={setState} />
       <button onClick={() => newSalts()}>New Salts</button>
       <button
         id="systemSalt"

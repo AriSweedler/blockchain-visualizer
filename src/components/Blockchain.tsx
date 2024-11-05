@@ -7,7 +7,7 @@ export default function Blockchain({state}) {
     border: "1em solid blue",
 
     height: "300px",
-    width: "80vw",
+    width: "100%",
     margin: "-1em",
 
     overflowX: "scroll",
@@ -26,7 +26,8 @@ export default function Blockchain({state}) {
           <Block
             key={hash}
             hash={hash}
-            state={state.blocks[hash]}
+            data={state.data}
+            blockState={state.blocks[hash]}
           />
         )}
       </div>

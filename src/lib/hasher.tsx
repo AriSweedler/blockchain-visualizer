@@ -2,12 +2,12 @@ import CryptoJS from 'crypto-js';
 
 /**
  * Hashes a given JavaScript object using the specified hashing algorithm.
- * 
+ *
  * @param {Object} obj - The object to be hashed.
  * @param {string} algorithm - The hashing algorithm to use (e.g., 'SHA-256', 'SHA-1', 'MD5').
  * @returns {string} - The resulting hash in hexadecimal format.
  */
-export default function hashObject(obj, algorithm = 'SHA-256') {
+export default function hash(obj, algorithm = 'SHA-256') {
   const jsonString = JSON.stringify(obj, Object.keys(obj).sort());
 
   let hash;

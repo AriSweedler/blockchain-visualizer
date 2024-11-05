@@ -1,8 +1,8 @@
 import hash from './hasher'
 
-const addBlock = (stateIn, miner) => {
+const addBlock = (stateIn, minerName) => {
   // Marshal the input data into a block
-  const newBlock = minerBlock(stateIn, miner)
+  const newBlock = minerBlock(stateIn, minerName)
   const newHash = hash(newBlock)
 
   // Deep copy stateIn
@@ -10,17 +10,25 @@ const addBlock = (stateIn, miner) => {
 
   // Update system level stuff
   stateOut.blocks[newHash] = newBlock
-  stateOut.meta.head = newHash
+  stateOut.meta.blockchainHead = newHash
 
   // And get new data to put
-
   return stateOut
 }
 
-const minerBlock = (stateIn, miner) => ({
-  parent: stateIn.meta.head,
-  data: miner.data,
-  salt: miner.salt,
-})
+const minerBlock = (stateIn, minerName) => {
+  const salt = stateIn.miners[minerName].salt
 
-export { addBlock, minerBlock }
+  return {
+    parent: stateIn.meta.blockchainHead,
+    data: stateIn.data,
+    salt: salt,
+    miner: minerName,
+  }
+}
+
+const randomSalt = () => {
+  return hash(Math.random().toString()).substring(0, 4)
+}
+
+export { addBlock, minerBlock, randomSalt }

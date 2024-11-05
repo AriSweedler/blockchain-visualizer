@@ -10,6 +10,7 @@ export default function App() {
 
   const appStyle = {
     border: "1em solid black",
+    maxWidth: "90vw",
   }
 
   return (

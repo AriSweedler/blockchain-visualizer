@@ -19,20 +19,17 @@ export default function Miner({state, minerName, setState}) {
   }
 
   const salt = state.miners[minerName].salt
+  const minerHash = hash(minerBlock(state, minerName))
 
   return (
     <div style={minerStyle} key={minerName}>
       <button onClick={
-        () => setState(addBlock(state, state.miners[minerName]))
+        () => setState(addBlock(state, minerName))
       }>
         <h2 style={minerNameStyle}>{minerName} mines</h2>
       </button>
       <p>Salt: <code>{salt}</code></p>
-      <h3>Hash:&nbsp;
-        <Hash hash={
-          hash(minerBlock(state, state.miners[minerName]))
-        } />
-      </h3>
+      <h3>Hash:&nbsp;<Hash hash={minerHash}/></h3>
     </div>
   )
 }
