@@ -3,8 +3,6 @@ import Blockchain from './components/Blockchain.tsx'
 import Miners from './components/Miners.tsx'
 import startingState from './lib/startingState.tsx'
 
-import './App.css'
-
 export default function App() {
   const [state, setState] = useState(startingState)
 
