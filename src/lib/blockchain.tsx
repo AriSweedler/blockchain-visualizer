@@ -1,4 +1,4 @@
-import hash from './hasher'
+import hash from './hasher.tsx'
 
 const addBlock = (stateIn, minerName) => {
   // Marshal the input data into a block

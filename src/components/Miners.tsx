@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Miner from './Miner.tsx'
 import Data from './Data.tsx'
-import hash from '../lib/hasher'
+import hash from '../lib/hasher.tsx'
 import { minerBlock, addBlock, randomSalt } from '../lib/blockchain.tsx'
 
 export default function Miners({state, setState}) {

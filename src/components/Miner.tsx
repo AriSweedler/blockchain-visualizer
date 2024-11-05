@@ -1,5 +1,5 @@
 import Hash from './Hash.tsx'
-import hash from '../lib/hasher'
+import hash from '../lib/hasher.tsx'
 import { addBlock, minerBlock } from '../lib/blockchain.tsx'
 
 export default function Miner({state, minerName, setState}) {
