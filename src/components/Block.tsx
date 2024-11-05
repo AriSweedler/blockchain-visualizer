@@ -1,5 +1,5 @@
-import React from 'react';
-import Hash from './Hash.tsx';
+import React from "react";
+import Hash from "./Hash.tsx";
 
 export default function Block({ hash, blockState }) {
   const color = `#${hash.slice(0, 6)}`;
@@ -12,25 +12,29 @@ export default function Block({ hash, blockState }) {
 
   const h3Style = {
     margin: "0",
-  }
+  };
 
   const tableStyle = {
-    width: '100%',
+    width: "100%",
     backgroundColor: "#222",
-    borderCollapse: 'collapse',
-    color: '#fff',
+    borderCollapse: "collapse",
+    color: "#fff",
   };
 
   const thTdStyle = {
-    border: '1px solid #444',
-    padding: '0.5em',
-    textAlign: 'left',
+    border: "1px solid #444",
+    padding: "0.5em",
+    textAlign: "left",
   };
 
   return (
     <div style={blockStyle}>
-      <h3 style={h3Style}>THIS <Hash hash={hash} /></h3>
-      <div>Parent: <Hash hash={blockState.parent} /></div>
+      <h3 style={h3Style}>
+        THIS <Hash hash={hash} />
+      </h3>
+      <div>
+        Parent: <Hash hash={blockState.parent} />
+      </div>
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -41,7 +45,9 @@ export default function Block({ hash, blockState }) {
         <tbody>
           <tr>
             <td style={thTdStyle}>Data</td>
-            <td style={thTdStyle}><code>{JSON.stringify(blockState.data)}</code></td>
+            <td style={thTdStyle}>
+              <code>{JSON.stringify(blockState.data)}</code>
+            </td>
           </tr>
           <tr>
             <td style={thTdStyle}>Salt</td>

@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import AutoResizeTextarea from './AutoResizeTextarea.tsx'
+import { useState } from "react";
+import AutoResizeTextarea from "./AutoResizeTextarea.tsx";
 
-export default function Data({state, setState}) {
+export default function Data({ state, setState }) {
   const [jsonText, setJsonText] = useState(JSON.stringify(state.data, null, 2));
   const [isValidJson, setIsValidJson] = useState(true);
 
   const dataWrapperStyle = {
     border: "0.25em solid green",
     margin: "1em",
-  }
+  };
 
   const dataStyle = {
     backgroundColor: "#333",
@@ -17,7 +17,7 @@ export default function Data({state, setState}) {
     fontSize: "2em",
 
     // same but a lot darker and closer to #333
-    backgroundColor: isValidJson ? '#454' : '#544',
+    backgroundColor: isValidJson ? "#454" : "#544",
 
     // Make it only as tall as the text
     width: "95%",
@@ -25,12 +25,12 @@ export default function Data({state, setState}) {
     overflow: "hidden",
     resize: "none",
     boxSizing: "border-box",
-  }
+  };
 
   const h2Style = {
     padding: "0",
     margin: "0",
-  }
+  };
 
   // Make the text box that has the JSON editable and turn nit red or green
   // based on if it is valid JSON
@@ -56,5 +56,5 @@ export default function Data({state, setState}) {
         onChange={handleJsonChange}
       />
     </div>
-  )
+  );
 }

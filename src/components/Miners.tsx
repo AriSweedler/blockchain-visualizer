@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import Miner from './Miner.tsx'
-import Data from './Data.tsx'
-import hash from '../lib/hasher.tsx'
-import { minerBlock, addBlock, randomSalt } from '../lib/blockchain.tsx'
+import { useState } from "react";
+import Miner from "./Miner.tsx";
+import Data from "./Data.tsx";
+import hash from "../lib/hasher.tsx";
+import { addBlock, minerBlock, randomSalt } from "../lib/blockchain.tsx";
 
-export default function Miners({state, setState}) {
+export default function Miners({ state, setState }) {
   const newSalts = () => {
-    let newState = JSON.parse(JSON.stringify(state))
+    let newState = JSON.parse(JSON.stringify(state));
     Object.keys(newState.miners).forEach((minerName) => {
-      newState.miners[minerName].salt = randomSalt()
-    })
-    setState(newState)
-    return newState
-  }
+      newState.miners[minerName].salt = randomSalt();
+    });
+    setState(newState);
+    return newState;
+  };
 
   // Return an array of miners. Filter out all miners that do not have hashes
   // starting with "0"
   const validMiner = (state) => {
-    let validMiners = []
+    let validMiners = [];
     Object.keys(state.miners).forEach((minerName) => {
-      let miner = state.miners[minerName]
-      let newBlock = minerBlock(state, minerName)
-      let newHash = hash(newBlock)
+      let miner = state.miners[minerName];
+      let newBlock = minerBlock(state, minerName);
+      let newHash = hash(newBlock);
       if (newHash.startsWith(state.meta.validBlockStartPrefix)) {
-        validMiners.push(minerName)
+        validMiners.push(minerName);
       }
-    })
-    return validMiners
-  }
+    });
+    return validMiners;
+  };
 
-  const [ssh, setSSH] = useState(false)
+  const [ssh, setSSH] = useState(false);
 
   const systemSalt = (state) => {
     setTimeout(() => {
@@ -43,14 +43,14 @@ export default function Miners({state, setState}) {
       }
       console.log("No valid blocks found this time. Trying again.");
       setState(newState);
-      systemSalt(newState)
+      systemSalt(newState);
     }, state.meta.systemSaltDelay);
     return;
   };
 
   const mineWrapperStyle = {
     border: "1em solid green",
-  }
+  };
 
   const mineStyle = {
     display: "flex",
@@ -59,10 +59,10 @@ export default function Miners({state, setState}) {
     backgroundColor: "#333",
     padding: "1em",
     margin: "1em",
-  }
+  };
 
   return (
-    <div style={mineWrapperStyle} >
+    <div style={mineWrapperStyle}>
       <h1>Miners</h1>
       <Data state={state} setState={setState} />
       <button onClick={() => newSalts()}>New Salts</button>
@@ -71,7 +71,8 @@ export default function Miners({state, setState}) {
         onClick={() => systemSalt(state)}
         onMouseEnter={() => setSSH(true)}
         onMouseLeave={() => setSSH(false)}
-      >System Salts
+      >
+        System Salts
       </button>
       <div style={mineStyle}>
         {Object.keys(state.miners).map((minerName) => (
@@ -84,5 +85,5 @@ export default function Miners({state, setState}) {
         ))}
       </div>
     </div>
-  )
+  );
 }
